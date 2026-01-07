@@ -1,0 +1,5 @@
+2026-01-02 11:27:36 - SUCCESS - Backup job 'job1' completed successfully
+2026-01-04 08:51:16 - FAIL - Backup job 'job2' failed: Source path does not exist
+2026-01-04 08:51:17 - FAIL - Email alert failed: (535, b'Incorrect authentication data')
+2026-01-04 08:53:00 - FAIL - Backup job 'job2' failed: Source path does not exist
+2026-01-04 09:11:40 - FAIL - Backup job 'job2' failed: Source path does not exist

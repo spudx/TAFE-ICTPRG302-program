@@ -4,7 +4,7 @@ backup.py
 Harvy Burgess
 v1.0
 
-Performs ful backups of files or directories based on a
+Performs full backups of files or directories based on a
 backup job defined in backupcfg.py.
 
 E.g.
@@ -19,11 +19,9 @@ import traceback
 
 import backupcfg
 
-
+#log successfull backup
 def log_message(message):
-    """
-    Log backup with timestamp
-    """
+
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(backupcfg.LOG_FILE, "a") as log_file:
         log_file.write(f"{timestamp} - {message}\n")
@@ -32,10 +30,10 @@ import smtplib
 from email.message import EmailMessage
 
 
+# send smtp email alert function
 def send_alert(job_name, error_message):
-    """
-    Send an email alert when a backup job fails.
-    """
+
+#define email content
     try:
         msg = EmailMessage()
         msg["From"] = backupcfg.EMAIL_FROM
@@ -48,7 +46,7 @@ def send_alert(job_name, error_message):
             f"Time: {datetime.datetime.now()}\n"
             f"Error: {error_message}"
         )
-
+# send email
         with smtplib.SMTP(backupcfg.SMTP_SERVER, backupcfg.SMTP_PORT) as server:
             server.starttls()
             server.login(
@@ -61,11 +59,8 @@ def send_alert(job_name, error_message):
         # log if email fails
         log_message(f"FAIL - Email alert failed: {exc}")
 
-
+# perform backup function definition
 def perform_backup(job_name, source, destination):
-    """
-    Perform the backup operation for a given job.
-    """
     timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     backup_name = f"{os.path.basename(source)}-{timestamp}"
     backup_path = os.path.join(destination, backup_name)
@@ -79,9 +74,9 @@ def perform_backup(job_name, source, destination):
 
 
 def main():
-    """
-    Main program logic.
-    """
+
+   # Main function to execute the backup job
+
     if len(sys.argv) != 2:
         error_msg = "No backup job name provided"
         log_message(f"FAIL - {error_msg}")
@@ -89,7 +84,7 @@ def main():
         return 1
 
     job_name = sys.argv[1]
-
+# check for job name
     if job_name not in backupcfg.BACKUP_JOBS:
         error_msg = f"Backup job '{job_name}' not found in configuration"
         log_message(f"FAIL - {error_msg}")
@@ -99,14 +94,14 @@ def main():
     job = backupcfg.BACKUP_JOBS[job_name]
     source = job.get("source")
     destination = job.get("destination")
-
+# confirm sourece and destination exist
     try:
         if not os.path.exists(source):
             raise FileNotFoundError("Source path does not exist")
 
         if not os.path.exists(destination):
             raise FileNotFoundError("Destination path does not exist")
-
+# perform backup
         perform_backup(job_name, source, destination)
 
         log_message(f"SUCCESS - Backup job '{job_name}' completed successfully")

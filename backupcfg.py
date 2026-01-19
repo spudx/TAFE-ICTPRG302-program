@@ -24,7 +24,11 @@ BACKUP_JOBS = {
         "destination": "backup"
     },
     "job2": {
-        "source": "test22",
-        "destination": "/path/to/backups"
+        "source": "test",
+        "destination": "testdir2"
+    },
+    "job3": {
+        "source": "null",
+        "destination": "backup"
     }
 }
